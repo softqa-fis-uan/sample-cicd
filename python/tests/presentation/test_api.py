@@ -7,17 +7,13 @@ class TestCreateGreeting:
         response = client.post("/greetings", json={"name": "Ada", "language": "en"})
 
         assert_that(response.status_code).is_equal_to(200)
-        assert_that(response.json()).is_equal_to(
-            {"greeting": "Hello, Ada!", "language": "en"}
-        )
+        assert_that(response.json()).is_equal_to({"greeting": "Hello, Ada!", "language": "en"})
 
     def test_language_is_case_insensitive_and_returns_canonical_code(self, client):
         response = client.post("/greetings", json={"name": "Ada", "language": "ES-co"})
 
         assert_that(response.status_code).is_equal_to(200)
-        assert_that(response.json()).is_equal_to(
-            {"greeting": "¡Hola, Ada!", "language": "es"}
-        )
+        assert_that(response.json()).is_equal_to({"greeting": "¡Hola, Ada!", "language": "es"})
 
     def test_unsupported_language_returns_400(self, client):
         response = client.post("/greetings", json={"name": "Ada", "language": "xx"})

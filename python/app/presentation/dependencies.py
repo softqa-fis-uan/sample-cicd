@@ -12,13 +12,16 @@ def get_language_repository() -> LanguageRepository:
     return InMemoryLanguageRepository()
 
 
+_language_repository_dependency = Depends(get_language_repository)
+
+
 def get_create_greeting(
-    repo: LanguageRepository = Depends(get_language_repository),
+    repo: LanguageRepository = _language_repository_dependency,
 ) -> CreateGreeting:
     return CreateGreeting(repo)
 
 
 def get_get_typical_greetings(
-    repo: LanguageRepository = Depends(get_language_repository),
+    repo: LanguageRepository = _language_repository_dependency,
 ) -> GetTypicalGreetings:
     return GetTypicalGreetings(repo)

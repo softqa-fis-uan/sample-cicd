@@ -2,7 +2,7 @@ from dataclasses import FrozenInstanceError
 
 from assertpy import assert_that
 
-from app.domain.entities import Greeting, LanguageProfile
+from app.domain.entities import Greeting
 from app.domain.errors import DomainError, UnsupportedLanguageError
 
 
@@ -34,9 +34,7 @@ class TestImmutability:
         )
 
     def test_language_profile_is_frozen(self, english):
-        assert_that(setattr).raises(FrozenInstanceError).when_called_with(
-            english, "code", "xx"
-        )
+        assert_that(setattr).raises(FrozenInstanceError).when_called_with(english, "code", "xx")
 
 
 class TestUnsupportedLanguageError:

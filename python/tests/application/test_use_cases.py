@@ -40,18 +40,16 @@ class TestCreateGreeting:
     def test_unsupported_language_raises(self, repository, language):
         use_case = CreateGreeting(repository)
 
-        assert_that(use_case.execute).raises(
-            UnsupportedLanguageError
-        ).when_called_with(name="Ada", language=language)
+        assert_that(use_case.execute).raises(UnsupportedLanguageError).when_called_with(
+            name="Ada", language=language
+        )
 
     def test_unsupported_language_error_keeps_original_input(self, repository):
         use_case = CreateGreeting(repository)
 
-        assert_that(use_case.execute).raises(
-            UnsupportedLanguageError
-        ).when_called_with(name="Ada", language="XX").is_equal_to(
-            "Unsupported language: 'XX'"
-        )
+        assert_that(use_case.execute).raises(UnsupportedLanguageError).when_called_with(
+            name="Ada", language="XX"
+        ).is_equal_to("Unsupported language: 'XX'")
 
 
 class TestGetTypicalGreetings:
@@ -72,6 +70,4 @@ class TestGetTypicalGreetings:
     def test_unsupported_language_raises(self, repository, language):
         use_case = GetTypicalGreetings(repository)
 
-        assert_that(use_case.execute).raises(
-            UnsupportedLanguageError
-        ).when_called_with(language)
+        assert_that(use_case.execute).raises(UnsupportedLanguageError).when_called_with(language)

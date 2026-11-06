@@ -24,7 +24,7 @@ _400 = {400: {"description": "Invalid request or unsupported language"}}
 )
 def create_greeting(
     body: CreateGreetingRequest,
-    use_case: CreateGreeting = Depends(get_create_greeting),
+    use_case: Annotated[CreateGreeting, Depends(get_create_greeting)],
 ) -> GreetingResponse:
     greeting = use_case.execute(body.name, body.language)
     return GreetingResponse(greeting=greeting.text, language=greeting.language)
@@ -39,7 +39,7 @@ def create_greeting(
 )
 def get_typical_greetings(
     lang: Annotated[str, Query(description="Language code, such as en or es.", examples=["es"])],
-    use_case: GetTypicalGreetings = Depends(get_get_typical_greetings),
+    use_case: Annotated[GetTypicalGreetings, Depends(get_get_typical_greetings)],
 ) -> TypicalGreetingsResponse:
     profile = use_case.execute(lang)
     return TypicalGreetingsResponse(
