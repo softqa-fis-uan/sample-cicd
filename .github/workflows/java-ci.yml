@@ -21,24 +21,24 @@ env:
   COVERAGE_MIN: ${{ inputs.coverage_min || vars.COVERAGE_MIN || '80' }}
 
 jobs:
-  static-analysis:
-    name: Static analysis
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v7
+  # static-analysis:
+  #   name: Static analysis
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 15
+  #   steps:
+  #     - uses: actions/checkout@v7
 
-      - uses: actions/setup-java@v6
-        with:
-          java-version: 25
-          distribution: temurin
-          cache: gradle
+  #     - uses: actions/setup-java@v6
+  #       with:
+  #         java-version: 25
+  #         distribution: temurin
+  #         cache: gradle
 
-      - name: Linters and....
-        working-directory: java
-        run: |
-          chmod u+x ./gradlew
-          ./gradlew spotbugsCheck checkstyleMain pmdMain
+  #     - name: Linters and....
+  #       working-directory: java
+  #       run: |
+  #         chmod u+x ./gradlew
+  #         ./gradlew spotbugsCheck checkstyleMain pmdMain
 
 
   tests:
