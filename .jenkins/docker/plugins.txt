@@ -1,0 +1,8 @@
+workflow-aggregator
+git
+docker-workflow
+warnings-ng
+coverage
+htmlpublisher
+junit
+configuration-as-code

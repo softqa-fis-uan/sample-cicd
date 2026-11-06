@@ -10,7 +10,7 @@ services:
         networks:
             - jenkins
     jenkins:
-        image: jenkins/jenkins:lts # Use the Long Term Support (LTS) version
+        build: ./.jenkins/docker
         privileged: true # Required for Docker-in-Docker scenarios or some plugins
         user: root # Run as root to avoid permission issues, especially for Docker integration
         ports:
@@ -22,6 +22,7 @@ services:
             - /usr/bin/docker:/usr/bin/docker # Make Docker executable available inside the container
         environment:
             - DOCKER_HOST=tcp://docker:2375 # If you are running Docker daemon in a separate service
+            - JENKINS_ADMIN_PASSWORD=${JENKINS_ADMIN_PASSWORD:?set it in .env}
         restart: unless-stopped # Automatically restart Jenkins unless manually stopped
         networks:
             - jenkins
