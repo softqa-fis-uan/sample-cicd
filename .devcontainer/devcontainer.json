@@ -1,0 +1,21 @@
+{
+	"name": "CI/CD Dev Container",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+	"features": {
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.15",
+			"installTools": false,
+			"optimize": "false",
+			"toolsToInstall": [
+				"uv"
+			]
+		},
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "25",
+			"installMaven": false,
+			"installGradle": true
+		},
+		// "ghcr.io/devcontainers-extra/features/uv:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:4": {}
+	}
+}
