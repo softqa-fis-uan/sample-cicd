@@ -1,4 +1,5 @@
-[![Python CI](https://github.com/softqa-fis-uan/sample-cicd/actions/workflows/python-ci.yml/badge.svg?branch=main)](https://github.com/softqa-fis-uan/sample-cicd/actions/workflows/python-ci.yml)
+[![Python CI](https://github.com/softqa-fis-uan/sample-cicd/actions/workflows/python-ci.yml/badge.svg?branch=main)](https://github.com/softqa-fis-uan/sample-cicd/actions/workflows/python-ci.yml) 
+[![Java CI](https://github.com/softqa-fis-uan/sample-cicd/actions/workflows/java-ci.yml/badge.svg?branch=main)](https://github.com/softqa-fis-uan/sample-cicd/actions/workflows/java-ci.yml)
 
 # Integración continua y despliegues continuos
 
