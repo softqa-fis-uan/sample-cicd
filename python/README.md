@@ -1,6 +1,6 @@
 # FastAPI
 
-Esta carpeta contiene la implementación del API definido en [`service-contract.yaml`](../service-contract.yaml). Puede ver el swagger de la aplicación en (http://localhost:8000/docs)
+Esta carpeta contiene la implementación del API definido en [`service-contract.yaml`](../greetings.yaml). Puede ver el swagger de la aplicación en (http://localhost:8000/docs)
 
 Para correr la aplicación usar:
 
