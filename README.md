@@ -1,3 +1,5 @@
+[![Python CI](https://github.com/softqa-fis-uan/sample-cicd/actions/workflows/python-ci.yml/badge.svg?branch=main)](https://github.com/softqa-fis-uan/sample-cicd/actions/workflows/python-ci.yml)
+
 # Integración continua y despliegues continuos
 
 Este repositorio contiene ejemplo de integración y despliegues continuos usando herramientas como Jenkins y Github Actions. Un flujo de trabajo típico de integración continua incluye tareas como:
@@ -43,3 +45,43 @@ flowchart LR
 Para poner esto a prueba vamos a usar dos aplicaciones, una escrita en [Java](java/) y otra en [Python](python/). Las dos exponen un [API](service-contract.yaml) al cual le haremos pruebas unitarias, pruebas de integración, y validación estática de código para encontrar posible problemas de lógica o de seguridad.
 
 Tenemos tambien pipelines de integracion continua configurados para [Jenkins](.jenkins) y para [Github Actions](.github/workflows/). Puede ver el resultado de la ejecucion de este ultimo en la pestanna de `Acciones` en GitHub. Para usar Jenkins este repositorio tambien tiene preconfigurados contenedores que ejecutan las aplicaciones y tambien Jenkins. Este estara disponible en el puerto 8080 (http://localhost:8080) con el usuario admin. Antes de iniciar docker compose cree un archivo `.env` usando como referencia el archivo `.env.sample` indicando cual es la clave que quiere usar para el usuario administrador de Jenkins. Para iniciar los contenedores use el comando `docker compose up -d`.
+
+## Arquitectura de la aplicacionnm
+
+### Level 1: System Context
+
+```mermaid
+C4Context
+    title System Context diagram for Greetings API
+
+    Person(consumer, "API consumer", "Developer or application that requests greetings. Explores the API through Swagger UI.")
+    System(api, "Greetings API", "Generates personalized greetings and lists typical greetings in different languages.")
+    System_Ext(cdn, "jsDelivr CDN", "Hosts the JavaScript and CSS that the Swagger UI page loads in the browser.")
+
+    Rel(consumer, api, "Creates greetings, lists typical greetings, reads the OpenAPI spec", "HTTP/JSON")
+    Rel(consumer, cdn, "Loads Swagger UI assets (docs page only)", "HTTPS")
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
+
+### Level 2: Container
+
+```mermaid
+C4Container
+    title Container diagram for Greetings API
+
+    Person(consumer, "API consumer", "Developer or application that requests greetings.")
+    System_Ext(cdn, "jsDelivr CDN", "Hosts the Swagger UI JavaScript and CSS.")
+
+    System_Boundary(sys, "Greetings API") {
+        Container(app, "API application", "Python 3.15, FastAPI, Uvicorn", "Validates requests, generates greetings, serves the OpenAPI spec and Swagger UI at /docs. Language data is held in memory. Runs in a Docker container.")
+
+        ContainerDb(db, "Language database", "In Memory DB", "Stores language profiles and typical greetings.")
+        Rel(app, db, "Reads language profiles", "SQL/TCP")
+    }
+
+    Rel(consumer, app, "POST /greetings, GET /greetings, GET /docs", "HTTP/JSON")
+    Rel(consumer, cdn, "Loads Swagger UI assets (docs page only)", "HTTPS")
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
