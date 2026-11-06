@@ -10,7 +10,7 @@ plugins {
     checkstyle
     pmd
     jacoco
-    id("com.github.spotbugs") version "6.4.8"
+    id("com.github.spotbugs") version "6.5.13"
 }
 
 group = "co.edu.uan.sample.greetings"
