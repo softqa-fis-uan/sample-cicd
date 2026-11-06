@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+	title: Greetings API
+	version: 1.0.0
+	description: Generate personalized and typical greetings in different languages.
+paths:
+	/greetings:
+		post:
+			operationId: createGreeting
+			summary: Generate a personalized greeting
+			requestBody:
+				required: true
+				content:
+					application/json:
+						schema:
+							type: object
+							required:
+								- name
+								- language
+							properties:
+								name:
+									type: string
+									example: Ada
+								language:
+									type: string
+									description: Language code, such as en or es.
+									example: en
+			responses:
+				'200':
+					description: Greeting generated successfully
+					content:
+						application/json:
+							schema:
+								$ref: '#/components/schemas/Greeting'
+				'400':
+					description: Invalid request or unsupported language
+		get:
+			operationId: getTypicalGreetings
+			summary: Get typical greetings in a language
+			parameters:
+				- name: lang
+					in: query
+					required: true
+					description: Language code, such as en or es.
+					schema:
+						type: string
+					example: es
+			responses:
+				'200':
+					description: Typical greetings for the requested language
+					content:
+						application/json:
+							schema:
+								type: object
+								required:
+									- language
+									- greetings
+								properties:
+									language:
+										type: string
+										example: es
+									greetings:
+										type: array
+										items:
+											type: string
+										example:
+											- Hola
+											- Buenos días
+				'400':
+					description: Missing or unsupported language
+components:
+	schemas:
+		Greeting:
+			type: object
+			required:
+				- greeting
+				- language
+			properties:
+				greeting:
+					type: string
+					example: Hello, Ada!
+				language:
+					type: string
+					example: en

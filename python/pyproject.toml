@@ -1,0 +1,59 @@
+[project]
+name = "greetings-fastapi"
+version = "0.1.0"
+requires-python = ">=3.15"
+dependencies = [
+    "fastapi>=0.162.0",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "assertpy>=2.36.0",
+    "httpx>=0.28.1",
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "pytest-html>=4.2.0",
+    "pytest-json-report>=1.5.0",
+    "ruff>=0.17.4",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = [
+    "--json-report",
+    "--json-report-file=build/reports/tests.json",
+    "--html=build/reports/tests.html",
+    "--self-contained-html",
+    "--cov=app",
+    "--cov-report=json:build/reports/coverage.json",
+    "--cov-report=html:build/reports/coverage",
+    "--cov-report=term-missing",
+    "--cov-fail-under=90",
+]
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "\\.\\.\\.",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "C4", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]   # allow assert in tests
+
+[tool.mypy]
+strict = true
+files = ["app"]

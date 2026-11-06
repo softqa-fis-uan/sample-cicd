@@ -1,0 +1,94 @@
+name: Python CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      coverage_min:
+        description: Minimum total coverage (%)
+        default: "80"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  COVERAGE_MIN: ${{ inputs.coverage_min || vars.COVERAGE_MIN || '80' }}
+  UV_LINK_MODE: copy
+
+jobs:
+  static-analysis:
+    name: Static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: python/uv.lock
+
+      - name: Install dependencies (also downloads the pinned Python)
+        run: uv sync --frozen
+        working-directory: python
+
+      # Run from the repo root so annotation paths (python/app/...) match the repo layout.
+      - name: Ruff lint
+        run: uv run --project python ruff check python/app python/tests --output-format=github
+
+      - name: Ruff format check
+        run: uv run --project python ruff format --check python/app python/tests
+
+      - name: Mypy
+        working-directory: python
+        run: |
+          echo "::add-matcher::${{ github.workspace }}/.github/mypy-matcher.json"
+          uv run mypy app --no-pretty --show-column-numbers --show-absolute-path
+
+  tests:
+    name: Tests & coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: python/uv.lock
+
+      - name: Install dependencies (also downloads the pinned Python)
+        run: uv sync --frozen
+
+      - name: Run tests (fails if coverage < ${{ env.COVERAGE_MIN }}%)
+        run: |
+          mkdir -p build/reports
+          uv run pytest \
+            --junitxml=build/reports/junit.xml \
+            --cov-report=xml:build/reports/coverage.xml \
+            --cov-fail-under="$COVERAGE_MIN"
+
+      - name: Coverage summary
+        if: always()
+        run: |
+          {
+            echo "### Coverage (minimum ${COVERAGE_MIN}%)"
+            uv run coverage report --format=markdown
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: python/build/reports/
+          if-no-files-found: warn

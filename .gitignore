@@ -23,6 +23,8 @@ share/python-wheels/
 venv/
 env/
 ENV/
+.uv-cache/
+.uv-python/
 
 # pytest and coverage
 .pytest_cache/
