@@ -1,4 +1,4 @@
-# Integracion continua y Despliegues continuos
+# Integración continua y despliegues continuos
 
 Este repositorio contiene ejemplo de integración y despliegues continuos usando herramientas como Jenkins y Github Actions. Un flujo de trabajo típico de integración continua incluye tareas como:
 
@@ -38,7 +38,8 @@ flowchart LR
     linkStyle default stroke:#1976d2,stroke-width:2px
 ```
 
-## Aplicación de ejemplo
+## Como usar este repositorio
 
-Para poner esto a prueba vamos a usar dos aplicaciones, una usando [Java](java/) y otra usando [Python](python/). Las dos exponen un API al cual le haremos pruebas unitarias, pruebas de integración, y validación estática de código para encontrar posible problemas de lógica o de seguridad.
+Para poner esto a prueba vamos a usar dos aplicaciones, una escrita en [Java](java/) y otra en [Python](python/). Las dos exponen un [API](service-contract.yaml) al cual le haremos pruebas unitarias, pruebas de integración, y validación estática de código para encontrar posible problemas de lógica o de seguridad.
 
+Tenemos tambien pipelines de integracion continua configurados para [Jenkins](.jenkins) y para [Github Actions](.github/workflows/). Puede ver el resultado de la ejecucion de este ultimo en la pestanna de `Acciones` en GitHub. Para usar Jenkins este repositorio tambien tiene preconfigurados contenedores que ejecutan las aplicaciones y tambien Jenkins. Este estara disponible en el puerto 8080 (http://localhost:8080) con el usuario admin. Antes de iniciar docker compose cree un archivo `.env` usando como referencia el archivo `.env.sample` indicando cual es la clave que quiere usar para el usuario administrador de Jenkins. Para iniciar los contenedores use el comando `docker compose up -d`.
