@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Query
 
@@ -12,7 +12,9 @@ from app.presentation.schemas import (
 
 router = APIRouter(prefix="/greetings", tags=["greetings"])
 
-_400 = {400: {"description": "Invalid request or unsupported language"}}
+_400: dict[int | str, dict[str, Any]] = {
+    400: {"description": "Invalid request or unsupported language"}
+}
 
 
 @router.post(
