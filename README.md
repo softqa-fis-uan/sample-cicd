@@ -42,7 +42,7 @@ flowchart LR
 
 ## Como usar este repositorio
 
-Para poner esto a prueba vamos a usar dos aplicaciones, una escrita en [Java](java/) y otra en [Python](python/). Las dos exponen un [API](service-contract.yaml) al cual le haremos pruebas unitarias, pruebas de integración, y validación estática de código para encontrar posible problemas de lógica o de seguridad.
+Para poner esto a prueba vamos a usar dos aplicaciones, una escrita en [Java](java/) y otra en [Python](python/). Las dos exponen un [API](greetings.yaml) al cual le haremos pruebas unitarias, pruebas de integración, y validación estática de código para encontrar posible problemas de lógica o de seguridad.
 
 Tenemos también pipelines de integración continua configurados para [Jenkins](.jenkins) y para [Github Actions](.github/workflows/). Puede ver el resultado de la ejecución de este ultimo en la pestaña de `Acciones` en GitHub. Para usar Jenkins este repositorio también tiene pre-configurados contenedores que ejecutan las aplicaciones y también Jenkins. Este último estará disponible en el puerto 8080 (http://localhost:8080) con el usuario `admin`. Antes de iniciar docker compose cree un archivo `.env` usando como referencia el archivo [`.env.sample`](.env.sample) indicando cual es la clave que quiere usar para el usuario administrador de Jenkins. Para iniciar los contenedores use el comando `docker compose up -d`.
 
@@ -62,26 +62,4 @@ C4Context
     Rel(consumer, cdn, "loads Swagger UI assets", "HTTPS")
 
     UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
-```
-
-### C4 Level 2: Contenedor
-
-```mermaid
-C4Container
-    title Container diagram for Greetings API
-
-    Person(consumer, "API consumer", "Developer or application that requests greetings.")
-    System_Ext(cdn, "jsDelivr CDN", "Hosts the Swagger UI JavaScript and CSS.")
-
-    System_Boundary(sys, "Greetings API") {
-        Container(app, "API application", "Python 3.15, FastAPI, Uvicorn", "Validates requests, generates greetings, serves the OpenAPI spec and Swagger UI at /docs. Language data is held in memory. Runs in a Docker container.")
-
-        ContainerDb(db, "Language database", "In Memory DB", "Stores language profiles and typical greetings.")
-        Rel(app, db, "Reads language profiles", "SQL/TCP")
-    }
-
-    Rel(consumer, app, "POST /greetings, GET /greetings, GET /docs", "HTTP/JSON")
-    Rel(consumer, cdn, "Loads Swagger UI assets (docs page only)", "HTTPS")
-
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 ```

@@ -16,6 +16,28 @@ uv run pytest -v
 
 ## Arquitectura de la app
 
+### C4 Level 2: Contenedor
+
+```mermaid
+C4Container
+    title Container diagram for Greetings API
+
+    Person(consumer, "API consumer", "Developer or application that requests greetings.")
+    System_Ext(cdn, "jsDelivr CDN", "Hosts the Swagger UI JavaScript and CSS.")
+
+    System_Boundary(sys, "Greetings API") {
+        Container(app, "API application", "Python 3.15, FastAPI, Uvicorn", "Validates requests, generates greetings, serves the OpenAPI spec and Swagger UI at /docs. Language data is held in memory. Runs in a Docker container.")
+
+        ContainerDb(db, "Language database", "In Memory DB", "Stores language profiles and typical greetings.")
+        Rel(app, db, "Reads language profiles", "SQL/TCP")
+    }
+
+    Rel(consumer, app, "POST /greetings, GET /greetings, GET /docs", "HTTP/JSON")
+    Rel(consumer, cdn, "Loads Swagger UI assets (docs page only)", "HTTPS")
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
+
 ### C4 Level 3: Diagrama de componentes
 
 ```mermaid
