@@ -44,11 +44,11 @@ flowchart LR
 
 Para poner esto a prueba vamos a usar dos aplicaciones, una escrita en [Java](java/) y otra en [Python](python/). Las dos exponen un [API](service-contract.yaml) al cual le haremos pruebas unitarias, pruebas de integración, y validación estática de código para encontrar posible problemas de lógica o de seguridad.
 
-Tenemos tambien pipelines de integracion continua configurados para [Jenkins](.jenkins) y para [Github Actions](.github/workflows/). Puede ver el resultado de la ejecucion de este ultimo en la pestanna de `Acciones` en GitHub. Para usar Jenkins este repositorio tambien tiene preconfigurados contenedores que ejecutan las aplicaciones y tambien Jenkins. Este estara disponible en el puerto 8080 (http://localhost:8080) con el usuario admin. Antes de iniciar docker compose cree un archivo `.env` usando como referencia el archivo `.env.sample` indicando cual es la clave que quiere usar para el usuario administrador de Jenkins. Para iniciar los contenedores use el comando `docker compose up -d`.
+Tenemos también pipelines de integración continua configurados para [Jenkins](.jenkins) y para [Github Actions](.github/workflows/). Puede ver el resultado de la ejecución de este ultimo en la pestaña de `Acciones` en GitHub. Para usar Jenkins este repositorio también tiene pre-configurados contenedores que ejecutan las aplicaciones y también Jenkins. Este último estará disponible en el puerto 8080 (http://localhost:8080) con el usuario `admin`. Antes de iniciar docker compose cree un archivo `.env` usando como referencia el archivo [`.env.sample`](.env.sample) indicando cual es la clave que quiere usar para el usuario administrador de Jenkins. Para iniciar los contenedores use el comando `docker compose up -d`.
 
-## Arquitectura de la aplicacionnm
+## Arquitectura de la aplicación
 
-### Level 1: System Context
+### C4 Level 1: Contexto del sistema
 
 ```mermaid
 C4Context
@@ -58,13 +58,13 @@ C4Context
     System(api, "Greetings API", "Generates personalized greetings and lists typical greetings in different languages.")
     System_Ext(cdn, "jsDelivr CDN", "Hosts the JavaScript and CSS that the Swagger UI page loads in the browser.")
 
-    Rel(consumer, api, "Creates greetings, lists typical greetings, reads the OpenAPI spec", "HTTP/JSON")
-    Rel(consumer, cdn, "Loads Swagger UI assets (docs page only)", "HTTPS")
+    Rel(consumer, api, "creates and list greetings", "HTTP/JSON")
+    Rel(consumer, cdn, "loads Swagger UI assets", "HTTPS")
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 ```
 
-### Level 2: Container
+### C4 Level 2: Contenedor
 
 ```mermaid
 C4Container

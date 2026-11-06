@@ -1,8 +1,8 @@
 # FastAPI
 
-Esta carpeta contiene la implemnetacion del API definido en [`service-contract.yaml`](../service-contract.yaml).
+Esta carpeta contiene la implementación del API definido en [`service-contract.yaml`](../service-contract.yaml). Puede ver el swagger de la aplicación en (http://localhost:8000/docs)
 
-Para correr la aplicacion usar:
+Para correr la aplicación usar:
 
 ```bash
 uv run uvicorn app.main:app --reload
@@ -16,7 +16,7 @@ uv run pytest -v
 
 ## Arquitectura de la app
 
-### Level 3: Component diagram
+### C4 Level 3: Diagrama de componentes
 
 ```mermaid
 C4Component
@@ -64,10 +64,10 @@ C4Component
     Rel(repo, port, "Implements")
     Rel(repo, model, "Returns")
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
 ```
 
-### Layers and dependencies
+### Capas y dependencias
 
 ```mermaid
 flowchart TB
@@ -115,7 +115,7 @@ flowchart TB
     repo --> entities
 ```
 
-### Request flow: `POST /greetings`
+### Flujo de un request: `POST /greetings`
 
 ```mermaid
 sequenceDiagram
