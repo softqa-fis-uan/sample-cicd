@@ -36,7 +36,9 @@ jobs:
 
       - name: Linters and....
         working-directory: java
-        run: ./gradlew spotbugsCheck checkstyleMain pmdMain
+        run: |
+          chmod u+x ./gradlew
+          ./gradlew spotbugsCheck checkstyleMain pmdMain
 
 
   tests:
@@ -58,6 +60,7 @@ jobs:
 
       - name: Run tests (fails if coverage < ${{ env.COVERAGE_MIN }}%)
         run: |
+          chmod u+x ./gradlew
           ./gradlew test
           ./gradlew integrationTest
 
