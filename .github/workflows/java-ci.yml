@@ -1,0 +1,78 @@
+name: Java CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      coverage_min:
+        description: Minimum total coverage (%)
+        default: "80"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  COVERAGE_MIN: ${{ inputs.coverage_min || vars.COVERAGE_MIN || '80' }}
+
+jobs:
+  static-analysis:
+    name: Static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v7
+        with:
+          java-version: 25
+          distribution: temurin
+          cache: gradle
+
+      - name: Linters and....
+        working-directory: java
+        run: ./gradlew spotbugsCheck checkstyleMain pmdMain
+
+
+  tests:
+    name: Tests & coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: java
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v7
+        with:
+          java-version: 25
+          distribution: temurin
+          cache: gradle
+          
+
+      - name: Run tests (fails if coverage < ${{ env.COVERAGE_MIN }}%)
+        run: |
+          ./gradlew test
+          ./gradlew integrationTest
+
+      # - name: Coverage summary
+      #   if: always()
+      #   run: |
+      #     {
+      #       echo "### Coverage (minimum ${COVERAGE_MIN}%)"
+      #       uv run coverage report --format=markdown
+      #     } >> "$GITHUB_STEP_SUMMARY"
+
+      # - name: Upload reports
+      #   if: always()
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: reports
+      #     path: python/build/reports/
+      #     if-no-files-found: warn
