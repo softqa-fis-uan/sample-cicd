@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker { image 'ghcr.io/astral-sh/uv:trixie-slim' }
-    }
+    agent any
 
     parameters {
         string(name: 'COVERAGE_MIN', defaultValue: '80',
