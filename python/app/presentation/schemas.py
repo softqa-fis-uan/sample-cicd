@@ -7,9 +7,7 @@ NonBlank = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)
 
 class CreateGreetingRequest(BaseModel):
     name: NonBlank = Field(examples=["Ada"])
-    language: NonBlank = Field(
-        description="Language code, such as en or es.", examples=["en"]
-    )
+    language: NonBlank = Field(description="Language code, such as en or es.", examples=["en"])
 
 
 class GreetingResponse(BaseModel):

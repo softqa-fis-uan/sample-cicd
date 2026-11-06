@@ -38,9 +38,7 @@ def create_greeting(
     responses=_400,
 )
 def get_typical_greetings(
-    lang: Annotated[
-        str, Query(description="Language code, such as en or es.", examples=["es"])
-    ],
+    lang: Annotated[str, Query(description="Language code, such as en or es.", examples=["es"])],
     use_case: GetTypicalGreetings = Depends(get_get_typical_greetings),
 ) -> TypicalGreetingsResponse:
     profile = use_case.execute(lang)

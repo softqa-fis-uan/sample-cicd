@@ -9,7 +9,9 @@ _PROFILES = {
         LanguageProfile("de", "Hallo, {name}!", ("Hallo", "Guten Morgen", "Guten Tag")),
         LanguageProfile("pt", "Olá, {name}!", ("Olá", "Bom dia", "Boa tarde")),
         LanguageProfile("it", "Ciao, {name}!", ("Ciao", "Buongiorno", "Salve")),
-        LanguageProfile("ja", "こんにちは、{name}！", ("こんにちは", "おはようございます", "こんばんは")),
+        LanguageProfile(
+            "ja", "こんにちは、{name}！", ("こんにちは", "おはようございます", "こんばんは")
+        ),
     )
 }
 
