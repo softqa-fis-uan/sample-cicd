@@ -13,7 +13,7 @@ plugins {
     id("com.github.spotbugs") version "6.5.13"
 }
 
-group = "co.edu.uan.sample.greetings"
+group = "com.example.greetings"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -152,7 +152,7 @@ jacoco {
 
 // Minimum line coverage as a ratio. Override with: ./gradlew check -PcoverageMin=0.85
 val coverageMin = providers.gradleProperty("coverageMin")
-    .map { it.toBigDecimal() }
+    .map { it.toBigDecimal().movePointLeft(2) }   // 80 -> 0.80
     .orElse("0.80".toBigDecimal())
 
 val coverageClassDirs = files(
