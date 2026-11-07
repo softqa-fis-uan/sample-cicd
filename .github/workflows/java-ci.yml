@@ -19,32 +19,45 @@ permissions:
 
 env:
   COVERAGE_MIN: ${{ inputs.coverage_min || vars.COVERAGE_MIN || '80' }}
+  COVERAGE_TARGET: "90"
 
 jobs:
-  # static-analysis:
-  #   name: Static analysis
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 15
-  #   steps:
-  #     - uses: actions/checkout@v7
+  static-analysis:
+    name: Static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
 
-  #     - uses: actions/setup-java@v6
-  #       with:
-  #         java-version: 25
-  #         distribution: temurin
-  #         cache: gradle
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
 
-  #     - name: Linters and....
-  #       working-directory: java
-  #       run: |
-  #         chmod u+x ./gradlew
-  #         ./gradlew spotbugsCheck checkstyleMain pmdMain
+      - uses: gradle/actions/setup-gradle@v5
 
+      - name: Checkstyle, PMD, SpotBugs
+        working-directory: java
+        run: ./gradlew checkstyleMain checkstyleTest pmdMain spotbugsMain --continue
+
+      # Runs even when the step above failed, so findings show on the PR diff.
+      - name: Annotate findings
+        if: always()
+        run: python3 .github/scripts/annotate_java_reports.py
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-analysis-reports
+          path: java/build/reports/
+          if-no-files-found: warn
 
   tests:
     name: Tests & coverage
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     defaults:
       run:
         working-directory: java
@@ -57,25 +70,45 @@ jobs:
           distribution: temurin
           cache: gradle
           
+      - uses: gradle/actions/setup-gradle@v5
 
-      - name: Run tests (fails if coverage < ${{ env.COVERAGE_MIN }}%)
+      - name: Run tests (fails if line coverage < ${{ env.COVERAGE_MIN }}%)
+        working-directory: java
+        run: >
+          ./gradlew test integrationTest jacocoTestReport jacocoTestCoverageVerification
+          -PcoverageMin="$COVERAGE_MIN" --continue
+
+      - name: Coverage summary and soft target
+        if: always()
         run: |
-          chmod u+x ./gradlew
-          ./gradlew test
-          ./gradlew integrationTest
+          python3 - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
 
-      # - name: Coverage summary
-      #   if: always()
-      #   run: |
-      #     {
-      #       echo "### Coverage (minimum ${COVERAGE_MIN}%)"
-      #       uv run coverage report --format=markdown
-      #     } >> "$GITHUB_STEP_SUMMARY"
+          report = Path("java/build/reports/jacoco/test/jacocoTestReport.xml")
+          if not report.exists():
+              raise SystemExit("No JaCoCo report found")
+          line = next(c for c in ET.parse(report).getroot().findall("counter") if c.get("type") == "LINE")
+          covered, missed = int(line.get("covered")), int(line.get("missed"))
+          pct = 100 * covered / (covered + missed)
+          minimum = float(os.environ["COVERAGE_MIN"])
+          target = float(os.environ["COVERAGE_TARGET"])
 
-      # - name: Upload reports
-      #   if: always()
-      #   uses: actions/upload-artifact@v7
-      #   with:
-      #     name: reports
-      #     path: python/build/reports/
-      #     if-no-files-found: warn
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              summary.write(f"### Line coverage: {pct:.1f}%\n\n")
+              summary.write(f"Hard limit {minimum:.0f}%, target {target:.0f}%.\n")
+
+          if minimum <= pct < target:
+              print(f"::warning title=Coverage::{pct:.1f}% is below the {target:.0f}% target")
+          PY
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            java/build/reports/
+            java/build/test-results/
+          if-no-files-found: warn
