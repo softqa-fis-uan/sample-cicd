@@ -73,7 +73,6 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
 
       - name: Run tests (fails if line coverage < ${{ env.COVERAGE_MIN }}%)
-        working-directory: java
         run: >
           ./gradlew test integrationTest jacocoTestReport jacocoTestCoverageVerification
           -PcoverageMin="$COVERAGE_MIN" --continue
@@ -81,10 +80,10 @@ jobs:
         if: always()
         run: |
           echo "--- reports"
-          find java/build/reports/jacoco -maxdepth 3 2>&1 | sort
+          find build/reports/jacoco -maxdepth 3 2>&1 | sort
           echo "--- execution data"
-          find java/build/jacoco -type f 2>&1
-          
+          find build/jacoco -type f 2>&1
+
       - name: Coverage summary and soft target
         if: always()
         run: |
@@ -93,7 +92,7 @@ jobs:
           import xml.etree.ElementTree as ET
           from pathlib import Path
 
-          report = Path("java/build/reports/jacoco/test/jacocoTestReport.xml")
+          report = Path("build/reports/jacoco/test/jacocoTestReport.xml")
           if not report.exists():
               raise SystemExit("No JaCoCo report found")
           line = next(c for c in ET.parse(report).getroot().findall("counter") if c.get("type") == "LINE")
@@ -116,6 +115,6 @@ jobs:
         with:
           name: test-reports
           path: |
-            java/build/reports/
-            java/build/test-results/
+            build/reports/
+            build/test-results/
           if-no-files-found: warn
