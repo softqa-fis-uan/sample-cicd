@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts-jdk21
+FROM jenkins/jenkins:lts-jdk25
 
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends lsb-release ca-certificates curl \
