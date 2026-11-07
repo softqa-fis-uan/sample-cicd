@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "com.example.greetings"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
 	toolchain {
@@ -193,4 +193,8 @@ tasks.jacocoTestCoverageVerification {
 
 tasks.check {
     dependsOn(tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
+}
+
+tasks.bootJar {
+    archiveFileName.set("greetings.jar")
 }

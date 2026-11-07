@@ -1,0 +1,9 @@
+.git
+.github
+.jenkins
+.devcontainer
+python
+docs
+**/build
+**/.gradle
+**/.idea

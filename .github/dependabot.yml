@@ -3,6 +3,7 @@ updates:
   - package-ecosystem: "docker"
     directories:
       - "/python"
+      - "/java"
       - "/.jenkins/docker"
     schedule:
       interval: "weekly"

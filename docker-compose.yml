@@ -2,11 +2,19 @@ name: greetings-api
 networks:
     jenkins:
 services:
+    java-app:
+        build:
+            context: .
+            dockerfile: java/Dockerfile
+        ports:
+            - "5001:8080"
+        networks:
+            - jenkins
     python-app:
         privileged: true
         build: ./python
         ports:
-            - "8000:8000"
+            - "5000:8000"
         networks:
             - jenkins
     jenkins:
