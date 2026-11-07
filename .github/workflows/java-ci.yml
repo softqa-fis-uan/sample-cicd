@@ -35,7 +35,7 @@ jobs:
           java-version: "25"
           cache: gradle
 
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Checkstyle, PMD, SpotBugs
         working-directory: java
@@ -70,7 +70,7 @@ jobs:
           distribution: temurin
           cache: gradle
           
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Run tests (fails if line coverage < ${{ env.COVERAGE_MIN }}%)
         run: >
