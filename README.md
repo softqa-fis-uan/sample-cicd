@@ -47,20 +47,4 @@ Para poner esto a prueba vamos a usar dos aplicaciones, una escrita en [Java](ja
 
 Tenemos también pipelines de integración continua configurados para [Jenkins](.jenkins) y para [Github Actions](.github/workflows/). Puede ver el resultado de la ejecución de este ultimo en la pestaña de `Acciones` en GitHub. Para usar Jenkins este repositorio también tiene pre-configurados contenedores que ejecutan las aplicaciones y también Jenkins. Este último estará disponible en el puerto 8080 (http://localhost:8080) con el usuario `admin`. Antes de iniciar docker compose cree un archivo `.env` usando como referencia el archivo [`.env.sample`](.env.sample) indicando cual es la clave que quiere usar para el usuario administrador de Jenkins. Para iniciar los contenedores use el comando `docker compose up -d`.
 
-## Arquitectura de la aplicación
-
-### C4 Level 1: Contexto del sistema
-
-```mermaid
-C4Context
-    title System Context diagram for Greetings API
-
-    Person(consumer, "API consumer", "Developer or application that requests greetings. Explores the API through Swagger UI.")
-    System(api, "Greetings API", "Generates personalized greetings and lists typical greetings in different languages.")
-    System_Ext(cdn, "jsDelivr CDN", "Hosts the JavaScript and CSS that the Swagger UI page loads in the browser.")
-
-    Rel(consumer, api, "creates and list greetings", "HTTP/JSON")
-    Rel(consumer, cdn, "loads Swagger UI assets", "HTTPS")
-
-    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
-```
+Puede encontrar mas información en la carpeta [docs](docs/).
