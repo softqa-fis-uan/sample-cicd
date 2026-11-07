@@ -1,0 +1,29 @@
+"""Intentional code smells for the CI course demo (reported as warnings only)."""
+
+
+def discount(
+    kind: str,
+    amount: float,
+    years: int,
+    is_vip: bool,
+    coupon: str | None,
+) -> float:
+    # TODO: replace this with a pricing strategy
+    if kind == "retail":
+        if is_vip:
+            if years > 5:
+                return amount * 0.7
+            return amount * 0.8
+        elif coupon:
+            return amount * 0.9
+        return amount
+    elif kind == "wholesale":
+        if years > 3:
+            return amount * 0.6
+        return amount * 0.75
+    elif kind == "staff":
+        return amount * 0.5
+    # old_price = amount * 1.2
+    print("unknown kind", kind)
+    return amount
+    

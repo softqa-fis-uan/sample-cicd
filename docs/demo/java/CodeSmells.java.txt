@@ -1,0 +1,30 @@
+package com.example.greetings.demo;
+
+public final class CodeSmells {
+
+    private CodeSmells() {
+    }
+
+    public static double discount(String kind, double amount, int years, boolean vip, String coupon) {
+        // TODO: replace this with a pricing strategy
+        if ("retail".equals(kind)) {
+            if (vip) {
+                if (years > 5) {
+                    return amount * 0.7;
+                }
+                return amount * 0.8;
+            } else if (coupon != null) {
+                return amount * 0.9;
+            }
+            return amount;
+        } else if ("wholesale".equals(kind)) {
+            if (years > 3) {
+                return amount * 0.6;
+            }
+            return amount * 0.75;
+        } else if ("staff".equals(kind)) {
+            return amount * 0.5;
+        }
+        return amount;
+    }
+}

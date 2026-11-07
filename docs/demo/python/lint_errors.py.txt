@@ -1,0 +1,8 @@
+import os  # F401: unused import
+
+
+PASSWORD = "hunter2"  # S105: hardcoded password
+
+
+def run(expr: str) -> object:
+    return eval(expr)  # S307: use of eval
