@@ -77,7 +77,14 @@ jobs:
         run: >
           ./gradlew test integrationTest jacocoTestReport jacocoTestCoverageVerification
           -PcoverageMin="$COVERAGE_MIN" --continue
-
+      - name: Debug JaCoCo output
+        if: always()
+        run: |
+          echo "--- reports"
+          find java/build/reports/jacoco -maxdepth 3 2>&1 | sort
+          echo "--- execution data"
+          find java/build/jacoco -type f 2>&1
+          
       - name: Coverage summary and soft target
         if: always()
         run: |
